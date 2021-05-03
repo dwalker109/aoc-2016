@@ -9,31 +9,22 @@ def main(path):
 
 
 def get_code_9x9(path):
-    curr = 5
-    result = []
-
-    moves = {
-        "U": lambda x: -3 if x > 3 else 0,
-        "D": lambda x: +3 if x < 7 else 0,
-        "L": lambda x: -1 if x not in [1, 4, 7] else 0,
-        "R": lambda x: +1 if x not in [3, 6, 9] else 0
+    pad = {
+        (0, 0): "1",
+        (1, 0): "2",
+        (2, 0): "3",
+        (0, 1): "4",
+        (1, 1): "5",
+        (2, 1): "6",
+        (0, 2): "7",
+        (1, 2): "8",
+        (2, 2): "9",
     }
 
-    instr = from_input(path)
-
-    for line in instr:
-        for move in line:
-            curr = curr + moves[move](curr)
-
-        result.append(curr)
-
-    return "".join(map(str, result))
+    return nav(path, pad, (1, 1))
 
 
 def get_code_batshit(path):
-    curr = (0, 2)
-    result = []
-
     pad = {
         (2, 0): "1",
 
@@ -53,6 +44,12 @@ def get_code_batshit(path):
 
         (2, 4): "D",
     }
+
+    return nav(path, pad, (0, 2))
+
+
+def nav(path, pad, curr):
+    result = []
 
     moves = {
         "U": lambda x, y: (x, y - 1),
