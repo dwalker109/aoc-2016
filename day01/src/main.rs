@@ -1,8 +1,14 @@
+use std::{
+    cmp::{max, min},
+    collections::HashMap,
+};
+
 use regex::Regex;
 
 fn main() {
-    let r1 = part_1(std::include_str!("../input"));
-    println!("Part 1: {}", r1);
+    let r = part_1_and_2(std::include_str!("../input"));
+    println!("Part 1: {}", r.0);
+    println!("Part 2: {}", r.1.unwrap());
 }
 
 #[derive(Clone, Copy)]
@@ -33,6 +39,7 @@ impl Facing {
     }
 }
 
+#[derive(PartialEq, Eq, Hash, Clone, Copy, Debug)]
 struct Coords(i32, i32);
 
 impl Coords {
@@ -52,26 +59,74 @@ impl Coords {
     }
 }
 
-fn part_1(input: &'static str) -> i32 {
+#[derive(Debug, Clone)]
+struct History {
+    totals: HashMap<Coords, i32>,
+    prev: Vec<Coords>,
+    first_dupe: Option<Coords>,
+}
+
+impl History {
+    fn increment(&mut self, ic: Coords, nc: Coords) -> Coords {
+        let Coords(ic_x, ic_y) = ic;
+        let Coords(nc_x, nc_y) = nc;
+
+        for x in min(ic_x, nc_x)..=max(ic_x, nc_x) {
+            for y in min(ic_y, nc_y)..=max(ic_y, nc_y) {
+                if self.prev.contains(&Coords(x, y)) {
+                    continue;
+                }
+
+                let e = self.totals.entry(Coords(x, y)).or_insert(0);
+                *e += 1;
+
+                if *e == 2 && self.first_dupe.is_none() {
+                    self.first_dupe = Some(Coords(x, y));
+                }
+            }
+        }
+
+        self.prev = vec![ic, nc];
+
+        nc
+    }
+
+    fn first_dupe_manhattan(&self) -> Option<i32> {
+        Some(self.first_dupe?.manhattan())
+    }
+}
+
+fn part_1_and_2(input: &'static str) -> (i32, Option<i32>) {
     let mut facing = Facing::North;
     let mut coords = Coords(0, 0);
+    let mut history = History {
+        totals: HashMap::new(),
+        prev: Vec::new(),
+        first_dupe: None,
+    };
 
     let regex = Regex::new(r#"([R|L])([1-9]+)"#).unwrap();
     for c in regex.captures_iter(input) {
         let d = c.get(1).unwrap().as_str();
         let n = c.get(2).unwrap().as_str();
         facing = facing.rot(d);
-        coords = coords.pos(facing, str::parse::<i32>(n).unwrap());
+        coords = history.increment(coords, coords.pos(facing, str::parse::<i32>(n).unwrap()));
     }
 
-    coords.manhattan()
+    (coords.manhattan(), history.first_dupe_manhattan())
 }
 
 #[cfg(test)]
 mod tests {
     #[test]
     fn part_1() {
-        let result = super::part_1(std::include_str!("../input_test"));
-        assert_eq!(result, 2)
+        let result = super::part_1_and_2(std::include_str!("../input_test_1"));
+        assert_eq!(result.0, 2)
+    }
+
+    #[test]
+    fn part_2() {
+        let result = super::part_1_and_2(std::include_str!("../input_test_2"));
+        assert_eq!(result.1.unwrap(), 4)
     }
 }
