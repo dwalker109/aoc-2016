@@ -4,6 +4,7 @@ fn main() {
     let input = include_str!("../input");
 
     println!("Part 1: {}", part_1(input));
+    println!("Part 2: {}", part_2(input));
 }
 
 fn part_1(input: &'static str) -> String {
@@ -22,19 +23,34 @@ fn part_1(input: &'static str) -> String {
     solve(input, pad, Lookup(2, 1))
 }
 
-fn solve(input: &'static str, pad: Pad, init: Lookup) -> String {
-    let mut curr = init;
+fn part_2(input: &'static str) -> String {
+    let pad = Pad(HashMap::from([
+        (Lookup(2, 0), '1'),
+        (Lookup(1, 1), '2'),
+        (Lookup(2, 1), '3'),
+        (Lookup(3, 1), '4'),
+        (Lookup(0, 2), '5'),
+        (Lookup(1, 2), '6'),
+        (Lookup(2, 2), '7'),
+        (Lookup(3, 2), '8'),
+        (Lookup(4, 2), '9'),
+        (Lookup(1, 3), 'A'),
+        (Lookup(2, 3), 'B'),
+        (Lookup(3, 3), 'C'),
+        (Lookup(2, 4), 'D'),
+    ]));
 
-    input.lines().fold(String::new(), |acc, el| {
-        let line_val = el
-            .trim()
-            .chars()
-            .fold::<Lookup, _>(curr, |acc, el| pad.next(el, acc));
+    solve(input, pad, Lookup(0, 2))
+}
 
-        curr = line_val;
-
-        format!("{}{}", acc, pad.0.get(&line_val).unwrap())
-    })
+fn solve(input: &'static str, pad: Pad, mut curr: Lookup) -> String {
+    input
+        .lines()
+        .map(|el| {
+            el.trim().chars().for_each(|el| curr = pad.next(el, curr));
+            pad.0.get(&curr).unwrap()
+        })
+        .collect::<String>()
 }
 
 #[derive(Copy, Clone, Hash, PartialEq, Eq, Debug)]
@@ -66,5 +82,11 @@ mod tests {
     fn part_1() {
         let r = super::part_1(include_str!("../input_test"));
         assert_eq!(r, "1985");
+    }
+
+    #[test]
+    fn part_2() {
+        let r = super::part_2(include_str!("../input_test"));
+        assert_eq!(r, "5DB3");
     }
 }
