@@ -120,13 +120,13 @@ fn part_1_and_2(input: &'static str) -> (i32, Option<i32>) {
 mod tests {
     #[test]
     fn part_1() {
-        let result = super::part_1_and_2(std::include_str!("../input_test_1"));
-        assert_eq!(result.0, 2)
+        let (result, _) = super::part_1_and_2(std::include_str!("../input"));
+        assert_eq!(result, 243)
     }
 
     #[test]
     fn part_2() {
-        let result = super::part_1_and_2(std::include_str!("../input_test_2"));
-        assert_eq!(result.1.unwrap(), 4)
+        let (_, result) = super::part_1_and_2(std::include_str!("../input"));
+        assert_eq!(result.unwrap(), 142)
     }
 }

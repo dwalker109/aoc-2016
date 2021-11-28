@@ -80,13 +80,13 @@ impl Pad {
 mod tests {
     #[test]
     fn part_1() {
-        let r = super::part_1(include_str!("../input_test"));
-        assert_eq!(r, "1985");
+        let r = super::part_1(include_str!("../input"));
+        assert_eq!(r, "92435");
     }
 
     #[test]
     fn part_2() {
-        let r = super::part_2(include_str!("../input_test"));
-        assert_eq!(r, "5DB3");
+        let r = super::part_2(include_str!("../input"));
+        assert_eq!(r, "C1A88");
     }
 }
