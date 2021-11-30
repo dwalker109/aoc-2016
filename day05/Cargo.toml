@@ -6,4 +6,5 @@ edition = "2021"
 [features]
 
 [dependencies]
+itoa = "0.4.8"
 md-5 = "0.9.1"
