@@ -1,12 +1,13 @@
 use md5::{Digest, Md5};
 
+static INPUT: &str = include_str!("../input");
+
 fn main() {
-    println!("Part 1: {}", part_1("ojvtpuvg"));
-    println!("Part 2: {}", part_2("ojvtpuvg"));
+    aoc_shared::runner::solve(|| part_1(INPUT), || part_2(INPUT))
 }
 
 fn part_1(input: &'static str) -> String {
-    let input = input.as_bytes();
+    let input = input.lines().next().unwrap().as_bytes();
     let mut password = Vec::with_capacity(8);
     let mut hasher = Md5::new();
 
@@ -33,7 +34,7 @@ fn part_1(input: &'static str) -> String {
 }
 
 fn part_2(input: &'static str) -> String {
-    let input = input.as_bytes();
+    let input = input.lines().next().unwrap().as_bytes();
     let mut password = vec![None; 8];
     let mut hasher = Md5::new();
 
@@ -73,15 +74,17 @@ fn part_2(input: &'static str) -> String {
 
 #[cfg(test)]
 mod tests {
+    static INPUT: &str = include_str!("../input_test");
+
     #[test]
     fn part_1() {
-        let r = super::part_1("ojvtpuvg");
-        assert_eq!(r, "4543c154");
+        let r = super::part_1(INPUT);
+        assert_eq!(r, "18f47a30");
     }
 
     #[test]
     fn part_2() {
-        let r = super::part_2("ojvtpuvg");
-        assert_eq!(r, "1050cbbd");
+        let r = super::part_2(INPUT);
+        assert_eq!(r, "05ace8e3");
     }
 }

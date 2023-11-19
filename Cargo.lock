@@ -12,6 +12,11 @@ dependencies = [
 ]
 
 [[package]]
+name = "aoc_shared"
+version = "0.4.0"
+source = "git+https://github.com/dwalker109/aoc-shared#204cd0cb0218328082341760ceac2cc8282a9e34"
+
+[[package]]
 name = "block-buffer"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -24,17 +29,22 @@ dependencies = [
 name = "day01"
 version = "0.1.0"
 dependencies = [
+ "aoc_shared",
  "regex",
 ]
 
 [[package]]
 name = "day02"
 version = "0.1.0"
+dependencies = [
+ "aoc_shared",
+]
 
 [[package]]
 name = "day03"
 version = "0.1.0"
 dependencies = [
+ "aoc_shared",
  "itertools",
 ]
 
@@ -42,6 +52,7 @@ dependencies = [
 name = "day04"
 version = "0.1.0"
 dependencies = [
+ "aoc_shared",
  "itertools",
  "regex",
 ]
@@ -50,6 +61,7 @@ dependencies = [
 name = "day05"
 version = "0.1.0"
 dependencies = [
+ "aoc_shared",
  "itoa",
  "md-5",
 ]

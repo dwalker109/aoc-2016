@@ -4,5 +4,5 @@ name = "day01"
 version = "0.1.0"
 
 [dependencies]
+aoc_shared = { workspace = true }
 regex = "1.5.4"
-

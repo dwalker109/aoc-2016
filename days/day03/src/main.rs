@@ -1,8 +1,9 @@
 use itertools::Itertools;
 
+static INPUT: &str = include_str!("../input");
+
 fn main() {
-    println!("Part 1: {}", part_1(include_str!("../input")));
-    println!("Part 2: {}", part_2(include_str!("../input")));
+    aoc_shared::runner::solve(|| part_1(INPUT), || part_2(INPUT))
 }
 
 fn part_1(input: &'static str) -> u32 {
@@ -44,15 +45,17 @@ fn is_triangle(maybe_triangle: impl Iterator<Item = u32>) -> bool {
 
 #[cfg(test)]
 mod tests {
+    static INPUT: &str = include_str!("../input_test");
+
     #[test]
     fn part_1() {
-        let r = super::part_1(include_str!("../input"));
-        assert_eq!(r, 917)
+        let r = super::part_1(INPUT);
+        assert_eq!(r, 3)
     }
 
     #[test]
     fn part_2() {
-        let r = super::part_2(include_str!("../input"));
-        assert_eq!(r, 1649)
+        let r = super::part_2(INPUT);
+        assert_eq!(r, 6)
     }
 }

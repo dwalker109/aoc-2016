@@ -5,10 +5,10 @@ use std::{
 
 use regex::Regex;
 
+static INPUT: &str = include_str!("../input");
+
 fn main() {
-    let r = part_1_and_2(std::include_str!("../input"));
-    println!("Part 1: {}", r.0);
-    println!("Part 2: {}", r.1.unwrap());
+    aoc_shared::runner::solve(|| part_1_and_2(INPUT).0, || part_1_and_2(INPUT).1.unwrap())
 }
 
 #[derive(Clone, Copy)]
@@ -118,15 +118,17 @@ fn part_1_and_2(input: &'static str) -> (i32, Option<i32>) {
 
 #[cfg(test)]
 mod tests {
+    static INPUT: &str = include_str!("../input_test");
+
     #[test]
     fn part_1() {
-        let (result, _) = super::part_1_and_2(std::include_str!("../input"));
-        assert_eq!(result, 243)
+        let (result, _) = super::part_1_and_2(INPUT);
+        assert_eq!(result, 8)
     }
 
     #[test]
     fn part_2() {
-        let (_, result) = super::part_1_and_2(std::include_str!("../input"));
-        assert_eq!(result.unwrap(), 142)
+        let (_, result) = super::part_1_and_2(INPUT);
+        assert_eq!(result.unwrap(), 4)
     }
 }

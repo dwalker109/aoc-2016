@@ -1,10 +1,9 @@
 use std::collections::HashMap;
 
-fn main() {
-    let input = include_str!("../input");
+static INPUT: &str = include_str!("../input");
 
-    println!("Part 1: {}", part_1(input));
-    println!("Part 2: {}", part_2(input));
+fn main() {
+    aoc_shared::runner::solve(|| part_1(INPUT), || part_2(INPUT))
 }
 
 fn part_1(input: &'static str) -> String {
@@ -78,15 +77,17 @@ impl Pad {
 
 #[cfg(test)]
 mod tests {
+    static INPUT: &str = include_str!("../input_test");
+
     #[test]
     fn part_1() {
-        let r = super::part_1(include_str!("../input"));
-        assert_eq!(r, "92435");
+        let r = super::part_1(INPUT);
+        assert_eq!(r, "1985");
     }
 
     #[test]
     fn part_2() {
-        let r = super::part_2(include_str!("../input"));
-        assert_eq!(r, "C1A88");
+        let r = super::part_2(INPUT);
+        assert_eq!(r, "5DB3");
     }
 }

@@ -6,5 +6,6 @@ edition = "2021"
 [features]
 
 [dependencies]
+aoc_shared = { workspace = true }
 itoa = "0.4.8"
 md-5 = "0.9.1"

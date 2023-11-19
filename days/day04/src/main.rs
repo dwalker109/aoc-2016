@@ -1,10 +1,13 @@
 use itertools::Itertools;
 use regex::Regex;
 
+static INPUT: &str = include_str!("../input");
+
 fn main() {
-    let rooms = get_real_rooms(include_str!("../input"));
-    println!("Part 1: {}", part_1(&rooms));
-    println!("Part 2: {}", part_2(&rooms));
+    aoc_shared::runner::solve(
+        || part_1(&get_real_rooms(INPUT)),
+        || part_2(&get_real_rooms(INPUT)),
+    )
 }
 
 fn part_1(rooms: &[Room]) -> usize {
@@ -74,16 +77,18 @@ struct Room {
 
 #[cfg(test)]
 mod tests {
+    static INPUT: &str = include_str!("../input_test");
+
     #[test]
     fn part_1() {
-        let rooms = super::get_real_rooms(include_str!("../input"));
+        let rooms = super::get_real_rooms(INPUT);
         let r = super::part_1(&rooms);
-        assert_eq!(r, 158835);
+        assert_eq!(r, 2507);
     }
 
     #[test]
     fn part_2() {
-        let rooms = super::get_real_rooms(include_str!("../input"));
+        let rooms = super::get_real_rooms(INPUT);
         let r = super::part_2(&rooms);
         assert_eq!(r, 993);
     }
