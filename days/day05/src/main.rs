@@ -1,6 +1,6 @@
 use md5::{Digest, Md5};
 
-static INPUT: &str = include_str!("../input");
+static INPUT: &str = include_str!("../../../input/day05");
 
 fn main() {
     aoc_shared::runner::solve(|| part_1(INPUT), || part_2(INPUT))

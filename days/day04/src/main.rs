@@ -1,7 +1,7 @@
 use itertools::Itertools;
 use regex::Regex;
 
-static INPUT: &str = include_str!("../input");
+static INPUT: &str = include_str!("../../../input/day04");
 
 fn main() {
     aoc_shared::runner::solve(

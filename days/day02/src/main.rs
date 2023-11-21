@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-static INPUT: &str = include_str!("../input");
+static INPUT: &str = include_str!("../../../input/day02");
 
 fn main() {
     aoc_shared::runner::solve(|| part_1(INPUT), || part_2(INPUT))

@@ -5,7 +5,7 @@ use std::{
 
 use regex::Regex;
 
-static INPUT: &str = include_str!("../input");
+static INPUT: &str = include_str!("../../../input/day01");
 
 fn main() {
     aoc_shared::runner::solve(|| part_1_and_2(INPUT).0, || part_1_and_2(INPUT).1.unwrap())

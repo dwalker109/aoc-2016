@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-static INPUT: &str = include_str!("../input");
+static INPUT: &str = include_str!("../../../input/day06");
 
 fn main() {
     aoc_shared::runner::solve(|| part1(INPUT), || part2(INPUT))
