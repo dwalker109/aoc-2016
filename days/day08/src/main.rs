@@ -1,3 +1,12 @@
+use nom::{
+    branch::alt,
+    bytes::complete::tag,
+    character::complete::{char, space0},
+    combinator::map,
+    number::complete::{be_u64, be_u8},
+    sequence::{preceded, separated_pair, Tuple},
+    IResult, Parser,
+};
 use std::collections::HashSet;
 
 static INPUT: &str = include_str!("../../../input/day08");
@@ -24,21 +33,43 @@ struct Screen {
 }
 
 enum Op {
+    Rect(usize, usize),
     Row(usize, usize),
     Col(usize, usize),
 }
 
 impl From<&str> for Op {
-    fn from(value: &str) -> Self {
-        let tok = value.split_whitespace();
-        let action = tok.nth(2).unwrap().as_bytes();
-        let subj = action
-        let dist = tok.nth(1).unwrap().parse::<usize>().unwrap();
+    fn from(input: &str) -> Self {
+        // fn rect(input: &str) -> IResult<&str, Op> {
+        //     map(
+        //         (tag("rect "), separated_pair(be_u8, char('x'), be_u8)),
+        //         |(_, x, y)| Op::Rect(x, y),
+        //     )(input)
+        // }
 
-        match op[0] {
-            b'x' => Self::Col(op[2], dist),
-            b'y' => Self::Row(op[2], dist),
-        }
+        let (_, op) = alt((
+            map(
+                (tag("rect "), separated_pair(be_u8, char('x'), be_u8)),
+                |(_, x, y)| Op::Rect(x, y),
+            ),
+            map(
+                (
+                    tag("rotate row y="),
+                    separated_pair(be_u8, tag(" by "), be_u8),
+                ),
+                |(_, y, d)| Op::Row(y, d),
+            ),
+            map(
+                (
+                    tag("rotate column x="),
+                    separated_pair(be_u8, tag(" by "), be_u8),
+                ),
+                |(_, y, d)| Op::Col(y, d),
+            ),
+        ))(input)
+        .unwrap();
+
+        todo!()
     }
 }
 
