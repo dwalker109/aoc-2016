@@ -1,39 +1,78 @@
+use std::collections::HashSet;
+use std::fmt::{Display, Formatter};
+
 use nom::character::complete::digit1;
 use nom::combinator::map_res;
 use nom::sequence::tuple;
 use nom::{
     branch::alt,
     bytes::complete::tag,
-    character::complete::{char, space0},
-    combinator::map,
-    number::complete::{be_u64, be_u8},
-    sequence::{preceded, separated_pair, Tuple},
+    character::complete::char,
+    sequence::{separated_pair, Tuple},
     IResult, Parser,
 };
-use std::collections::HashSet;
 
 static INPUT: &str = include_str!("../../../input/day08");
 
 type Answer = usize;
 
 fn main() {
-    aoc_shared::runner::solve(|| part1(INPUT), || part2(INPUT))
+    aoc_shared::runner::solve(|| part1(INPUT, 50, 6), || part2(INPUT, 50, 6))
 }
 
-const fn part1<const WIDTH: usize, const HEIGHT: usize>(input: &'static str) -> Answer {
-    let screen = Screen(HashSet::new());
-    let commands = input.lines().map(Op::from).collect::<Vec<_>>();
+fn part1(input: &'static str, w: usize, h: usize) -> Answer {
+    render(input, w, h).0.len()
 }
 
-fn part2(input: &'static str) -> Answer {
-    todo!();
+fn part2(input: &'static str, w: usize, h: usize) -> Answer {
+    print!("{}", render(input, w, h));
+
+    0
+}
+
+fn render(input: &str, w: usize, h: usize) -> Screen {
+    let mut screen = Screen::from((input, w, h));
+    let commands = input.lines().map(Op::from);
+
+    for op in commands {
+        screen.act(&op);
+    }
+
+    screen
 }
 
 #[derive(Debug, Default)]
-struct Screen(HashSet<(usize, usize)>);
+struct Screen(HashSet<(usize, usize)>, usize, usize);
+
+impl From<(&str, usize, usize)> for Screen {
+    fn from((value, w, h): (&str, usize, usize)) -> Self {
+        Self(HashSet::with_capacity(w * h), w, h)
+    }
+}
+
+impl Display for Screen {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        for y in 0..self.2 {
+            for x in 0..self.1 {
+                write!(
+                    f,
+                    "{}",
+                    match self.0.contains(&(x, y)) {
+                        true => "#",
+                        false => ".",
+                    }
+                )
+                .ok();
+            }
+            writeln!(f).ok();
+        }
+
+        writeln!(f)
+    }
+}
 
 impl Screen {
-    pub fn act<const WIDTH: usize, const HEIGHT: usize>(&mut self, op: &Op) {
+    pub fn act(&mut self, op: &Op) {
         match op {
             Op::Rect(width, height) => {
                 for x in 0..*width {
@@ -42,8 +81,28 @@ impl Screen {
                     }
                 }
             }
-            Op::Row(y, n) => {}
-            Op::Col(x, n) => {}
+            Op::Row(target, n) => {
+                let new_row = self
+                    .0
+                    .iter()
+                    .filter_map(|(x, y)| (y == target).then_some(((x + n) % self.1, *y)))
+                    .collect::<HashSet<_>>();
+
+                self.0.retain(|(_x, y)| y != target);
+
+                self.0.extend(&mut new_row.iter());
+            }
+            Op::Col(target, n) => {
+                let new_col = self
+                    .0
+                    .iter()
+                    .filter_map(|(x, y)| (x == target).then_some((*x, (y + n) % self.1)))
+                    .collect::<HashSet<_>>();
+
+                self.0.retain(|(x, _y)| x != target);
+
+                self.0.extend(&mut new_col.iter());
+            }
         }
     }
 }
@@ -56,7 +115,7 @@ enum Op {
 
 impl From<&str> for Op {
     fn from(input: &str) -> Self {
-        let rect = |input: &str| -> IResult<&str, Op> {
+        fn rect(input: &str) -> IResult<&str, Op> {
             let (input, (_, (x, y))) = tuple((
                 tag("rect "),
                 separated_pair(
@@ -69,9 +128,9 @@ impl From<&str> for Op {
             Ok((input, Op::Rect(x, y)))
         };
 
-        let row = |input: &str| -> IResult<&str, Op> {
+        fn row(input: &str) -> IResult<&str, Op> {
             let (input, (_, (y, n))) = tuple((
-                tag("rotate row y= "),
+                tag("rotate row y="),
                 separated_pair(
                     map_res(digit1, str::parse),
                     tag(" by "),
@@ -82,9 +141,9 @@ impl From<&str> for Op {
             Ok((input, Op::Row(y, n)))
         };
 
-        let col = |input: &str| -> IResult<&str, Op> {
+        fn col(input: &str) -> IResult<&str, Op> {
             let (input, (_, (x, n))) = tuple((
-                tag("rotate column x= "),
+                tag("rotate column x="),
                 separated_pair(
                     map_res(digit1, str::parse),
                     tag(" by "),
@@ -107,11 +166,11 @@ mod tests {
 
     #[test]
     fn part1() {
-        assert_eq!(super::part1(INPUT), 6);
+        assert_eq!(super::part1(INPUT, 7, 3), 6);
     }
 
     #[test]
     fn part2() {
-        assert_eq!(super::part2(INPUT), super::Answer::default());
+        assert_eq!(super::part2(INPUT, 7, 3), 0);
     }
 }
